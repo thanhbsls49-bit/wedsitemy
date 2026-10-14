@@ -1,689 +1,1128 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StudyHub - Trang học tập sinh viên</title>
+<title>StudyFlow — Không gian học tập thông minh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --primary:#6c5ce7;
-    --primary-dark:#5a4bd1;
-    --accent:#00cec9;
-    --bg:#f5f6fa;
-    --card:#ffffff;
-    --text:#2d3436;
-    --text-light:#7f8c8d;
-    --border:#e8eaf0;
-    --success:#00b894;
-    --danger:#e17055;
-    --warning:#fdcb6e;
-    --shadow:0 4px 20px rgba(0,0,0,0.06);
-  }
-  body.dark{
-    --bg:#1a1a2e;
-    --card:#242438;
-    --text:#eaeaea;
-    --text-light:#a0a0b8;
-    --border:#32324a;
-    --shadow:0 4px 20px rgba(0,0,0,0.3);
-  }
-  *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,sans-serif;}
-  body{background:var(--bg);color:var(--text);transition:all .3s;min-height:100vh;}
+:root{
+  --primary:#6366f1;--primary-600:#4f46e5;--primary-50:#eef2ff;
+  --accent:#06b6d4;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;
+  --bg:#f6f7fb;--surface:#ffffff;--surface-2:#f8fafc;
+  --text:#0f172a;--text-dim:#64748b;--border:#e8ecf3;
+  --shadow-sm:0 1px 2px rgba(15,23,42,.04);
+  --shadow:0 4px 16px rgba(15,23,42,.06);
+  --shadow-lg:0 20px 50px rgba(15,23,42,.12);
+  --radius:16px;--radius-sm:10px;
+}
+[data-theme="dark"]{
+  --bg:#0a0f1e;--surface:#131a2e;--surface-2:#1a2340;
+  --text:#f1f5f9;--text-dim:#94a3b8;--border:#1e2942;
+  --primary-50:#1e1b4b;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+  --shadow:0 4px 16px rgba(0,0,0,.3);
+  --shadow-lg:0 20px 50px rgba(0,0,0,.4);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);
+  transition:background .3s,color .3s;overflow:hidden;-webkit-font-smoothing:antialiased;
+}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-dim)}
 
-  /* ===== HEADER ===== */
-  header{
-    background:linear-gradient(135deg,var(--primary),var(--accent));
-    color:white;padding:18px 28px;display:flex;align-items:center;
-    justify-content:space-between;box-shadow:var(--shadow);
-    position:sticky;top:0;z-index:100;
-  }
-  .logo{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:700;}
-  .logo-icon{
-    width:40px;height:40px;background:rgba(255,255,255,.2);
-    border-radius:12px;display:flex;align-items:center;justify-content:center;
-    font-size:22px;
-  }
-  .header-actions{display:flex;gap:10px;align-items:center;}
-  .btn-icon{
-    background:rgba(255,255,255,.2);border:none;color:white;width:42px;height:42px;
-    border-radius:12px;cursor:pointer;font-size:18px;transition:.2s;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .btn-icon:hover{background:rgba(255,255,255,.35);transform:translateY(-2px);}
-  .clock{font-size:14px;font-weight:500;background:rgba(255,255,255,.15);
-    padding:10px 16px;border-radius:12px;}
+.app{display:grid;grid-template-columns:260px 1fr;height:100vh}
 
-  /* ===== NAV TABS ===== */
-  nav{
-    display:flex;gap:8px;padding:16px 28px;overflow-x:auto;
-    background:var(--card);border-bottom:1px solid var(--border);
-    position:sticky;top:76px;z-index:99;
-  }
-  nav::-webkit-scrollbar{height:4px;}
-  nav::-webkit-scrollbar-thumb{background:var(--primary);border-radius:4px;}
-  .tab{
-    padding:10px 20px;border:none;background:transparent;color:var(--text-light);
-    font-size:15px;font-weight:600;cursor:pointer;border-radius:10px;
-    white-space:nowrap;transition:.2s;display:flex;align-items:center;gap:8px;
-  }
-  .tab:hover{background:var(--bg);color:var(--text);}
-  .tab.active{background:var(--primary);color:white;box-shadow:0 4px 12px rgba(108,92,231,.3);}
+/* ===== SIDEBAR ===== */
+.sidebar{
+  background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:20px 14px;overflow-y:auto;
+}
+.brand{display:flex;align-items:center;gap:12px;padding:8px 10px 22px}
+.brand-logo{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  box-shadow:0 8px 20px rgba(99,102,241,.35);
+}
+.brand-name{font-family:'Sora',sans-serif;font-weight:800;font-size:19px;letter-spacing:-.5px}
+.brand-sub{font-size:11px;color:var(--text-dim);font-weight:500}
 
-  /* ===== MAIN ===== */
-  main{padding:28px;max-width:1300px;margin:0 auto;}
-  .view{display:none;animation:fadeIn .4s;}
-  .view.active{display:block;}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.nav-label{
+  font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;
+  letter-spacing:1px;padding:12px 10px 8px;
+}
+.nav{display:flex;flex-direction:column;gap:4px;flex:1}
+.nav-item{
+  display:flex;align-items:center;gap:12px;padding:11px 12px;
+  border-radius:var(--radius-sm);border:none;background:transparent;
+  color:var(--text-dim);font-family:inherit;font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .2s;text-align:left;width:100%;
+}
+.nav-item:hover{background:var(--surface-2);color:var(--text)}
+.nav-item.active{
+  background:linear-gradient(135deg,var(--primary),var(--primary-600));
+  color:white;box-shadow:0 8px 20px -4px rgba(99,102,241,.5);
+}
+.nav-icon{
+  width:28px;height:28px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:14px;background:var(--surface-2);
+  transition:all .2s;flex-shrink:0;
+}
+.nav-item.active .nav-icon{background:rgba(255,255,255,.2)}
+.nav-item:hover:not(.active) .nav-icon{background:var(--primary-50)}
+.nav-key{
+  margin-left:auto;font-size:10px;opacity:.5;font-weight:700;
+  padding:2px 6px;border-radius:5px;background:var(--surface-2);
+}
+.nav-item.active .nav-key{background:rgba(255,255,255,.2);opacity:.9}
 
-  .section-title{
-    font-size:22px;font-weight:700;margin-bottom:18px;
-    display:flex;align-items:center;gap:10px;
-  }
-  .section-title::before{
-    content:'';width:5px;height:24px;background:var(--primary);border-radius:3px;
-  }
+.sidebar-card{
+  margin-top:16px;padding:16px;border-radius:var(--radius);
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:white;position:relative;overflow:hidden;
+}
+.sidebar-card::after{
+  content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;
+  background:rgba(255,255,255,.15);border-radius:50%;
+}
+.sidebar-card h4{font-size:13px;font-weight:700;margin-bottom:6px;position:relative}
+.sidebar-card p{font-size:12px;opacity:.92;line-height:1.5;margin-bottom:12px;position:relative}
+.sidebar-card button{
+  width:100%;padding:9px;border-radius:8px;border:none;
+  background:rgba(255,255,255,.95);color:var(--primary-600);font-weight:700;
+  font-size:12px;cursor:pointer;position:relative;transition:.2s;font-family:inherit;
+}
+.sidebar-card button:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.15)}
 
-  /* ===== CARDS ===== */
-  .grid{display:grid;gap:20px;}
-  .grid-4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
-  .grid-3{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));}
-  .grid-2{grid-template-columns:repeat(auto-fit,minmax(360px,1fr));}
+/* ===== MAIN ===== */
+.main{display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{
+  display:flex;align-items:center;gap:16px;padding:16px 28px;
+  border-bottom:1px solid var(--border);background:var(--surface);
+}
+.menu-btn{
+  display:none;width:40px;height:40px;border-radius:10px;border:1px solid var(--border);
+  background:var(--surface);color:var(--text);font-size:18px;cursor:pointer;
+}
+.search-wrap{flex:1;max-width:420px;position:relative}
+.search-wrap svg{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  color:var(--text-dim);pointer-events:none;
+}
+.search-wrap input{
+  width:100%;padding:10px 16px 10px 42px;border-radius:12px;
+  border:1px solid var(--border);background:var(--surface-2);color:var(--text);
+  font-family:inherit;font-size:14px;outline:none;transition:.2s;
+}
+.search-wrap input:focus{
+  border-color:var(--primary);background:var(--surface);
+  box-shadow:0 0 0 4px rgba(99,102,241,.1);
+}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.icon-btn{
+  width:42px;height:42px;border-radius:12px;border:1px solid var(--border);
+  background:var(--surface);color:var(--text);font-size:17px;cursor:pointer;
+  transition:.2s;display:flex;align-items:center;justify-content:center;position:relative;
+}
+.icon-btn:hover{background:var(--surface-2);border-color:var(--primary)}
+.icon-btn .dot{
+  position:absolute;top:9px;right:9px;width:8px;height:8px;background:var(--danger);
+  border-radius:50%;border:2px solid var(--surface);
+}
+.avatar{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),var(--primary));
+  display:flex;align-items:center;justify-content:center;color:white;
+  font-weight:700;font-size:14px;cursor:pointer;
+}
+.content{flex:1;overflow-y:auto;padding:28px;scroll-behavior:smooth}
 
-  .card{
-    background:var(--card);border-radius:16px;padding:22px;
-    box-shadow:var(--shadow);border:1px solid var(--border);transition:.25s;
-  }
-  .card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.1);}
+.view{display:none;animation:fadeUp .4s ease}
+.view.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
-  .stat-card{display:flex;align-items:center;gap:16px;}
-  .stat-icon{
-    width:56px;height:56px;border-radius:14px;display:flex;
-    align-items:center;justify-content:center;font-size:26px;flex-shrink:0;
-  }
-  .stat-icon.purple{background:#ede9ff;color:var(--primary);}
-  .stat-icon.teal{background:#dffaf8;color:var(--accent);}
-  .stat-icon.green{background:#dff7ee;color:var(--success);}
-  .stat-icon.orange{background:#fff0e6;color:var(--danger);}
-  body.dark .stat-icon.purple{background:rgba(108,92,231,.2);}
-  body.dark .stat-icon.teal{background:rgba(0,206,201,.2);}
-  body.dark .stat-icon.green{background:rgba(0,184,148,.2);}
-  body.dark .stat-icon.orange{background:rgba(225,112,85,.2);}
-  .stat-info h3{font-size:26px;font-weight:700;}
-  .stat-info p{font-size:13px;color:var(--text-light);margin-top:2px;}
+.page-head{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:22px;gap:16px;flex-wrap:wrap;
+}
+.page-title h1{
+  font-family:'Sora',sans-serif;font-size:26px;font-weight:800;
+  letter-spacing:-.6px;margin-bottom:4px;
+}
+.page-title p{color:var(--text-dim);font-size:14px}
 
-  /* ===== BUTTONS ===== */
-  .btn{
-    padding:11px 20px;border:none;border-radius:10px;cursor:pointer;
-    font-size:14px;font-weight:600;transition:.2s;display:inline-flex;
-    align-items:center;gap:8px;font-family:inherit;
-  }
-  .btn-primary{background:var(--primary);color:white;}
-  .btn-primary:hover{background:var(--primary-dark);transform:translateY(-2px);}
-  .btn-accent{background:var(--accent);color:white;}
-  .btn-danger{background:var(--danger);color:white;}
-  .btn-ghost{background:var(--bg);color:var(--text);border:1px solid var(--border);}
-  .btn-ghost:hover{border-color:var(--primary);color:var(--primary);}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:12px;
+  border:none;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;
+  transition:.2s;white-space:nowrap;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--primary),var(--primary-600));color:white;
+  box-shadow:0 8px 20px -6px rgba(99,102,241,.6);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 26px -6px rgba(99,102,241,.7)}
+.btn-ghost{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--primary);color:var(--primary)}
+.btn-danger{background:var(--danger);color:white}
+.btn-sm{padding:7px 13px;font-size:13px;border-radius:9px}
 
-  /* ===== FORM ===== */
-  .input-group{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
-  input,select,textarea{
-    flex:1;min-width:150px;padding:12px 16px;border:1.5px solid var(--border);
-    border-radius:10px;background:var(--bg);color:var(--text);font-size:14px;
-    outline:none;transition:.2s;font-family:inherit;
-  }
-  input:focus,select:focus,textarea:focus{border-color:var(--primary);background:var(--card);}
-  textarea{resize:vertical;min-height:100px;width:100%;}
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;box-shadow:var(--shadow-sm);transition:.25s;
+}
+.card-title{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
 
-  /* ===== TODO ===== */
-  .todo-item{
-    display:flex;align-items:center;gap:14px;padding:14px 16px;
-    background:var(--bg);border-radius:12px;margin-bottom:10px;
-    transition:.2s;border-left:4px solid var(--primary);
-  }
-  .todo-item:hover{background:var(--card);box-shadow:var(--shadow);}
-  .todo-item.done{opacity:.55;border-left-color:var(--success);}
-  .todo-item.done .todo-text{text-decoration:line-through;}
-  .todo-check{
-    width:22px;height:22px;border-radius:6px;border:2px solid var(--border);
-    cursor:pointer;display:flex;align-items:center;justify-content:center;
-    flex-shrink:0;transition:.2s;background:var(--card);color:transparent;font-size:13px;
-  }
-  .todo-check.checked{background:var(--success);border-color:var(--success);color:white;}
-  .todo-text{flex:1;font-size:15px;}
-  .todo-priority{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:700;}
-  .p-high{background:#ffe0e0;color:#d63031;}
-  .p-med{background:#fff4d6;color:#e17055;}
-  .p-low{background:#dff7ee;color:var(--success);}
-  body.dark .p-high{background:rgba(214,48,49,.25);}
-  body.dark .p-med{background:rgba(225,112,85,.25);}
-  body.dark .p-low{background:rgba(0,184,148,.25);}
-  .todo-del{background:none;border:none;color:var(--text-light);cursor:pointer;
-    font-size:16px;padding:6px;border-radius:8px;transition:.2s;}
-  .todo-del:hover{color:var(--danger);background:rgba(225,112,85,.1);}
+/* Banner */
+.banner{
+  background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#06b6d4 100%);
+  border-radius:20px;padding:26px 28px;color:white;margin-bottom:24px;
+  position:relative;overflow:hidden;box-shadow:0 20px 40px -20px rgba(99,102,241,.6);
+}
+.banner::before{
+  content:'';position:absolute;top:-50%;right:-10%;width:400px;height:400px;
+  background:radial-gradient(circle,rgba(255,255,255,.2),transparent 70%);border-radius:50%;
+}
+.banner::after{
+  content:'';position:absolute;bottom:-60%;left:10%;width:300px;height:300px;
+  background:radial-gradient(circle,rgba(255,255,255,.1),transparent 70%);border-radius:50%;
+}
+.banner-content{position:relative;z-index:1}
+.banner h2{
+  font-family:'Sora',sans-serif;font-size:24px;font-weight:800;
+  margin-bottom:6px;letter-spacing:-.5px;
+}
+.banner p{opacity:.9;font-size:14px}
+.banner-stats{display:flex;gap:14px;margin-top:18px;position:relative;z-index:1;flex-wrap:wrap}
+.banner-stat{
+  display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.15);
+  backdrop-filter:blur(10px);padding:10px 16px;border-radius:12px;
+  border:1px solid rgba(255,255,255,.2);
+}
+.banner-stat .val{font-size:19px;font-weight:800;font-family:'Sora',sans-serif}
+.banner-stat .lbl{font-size:11px;opacity:.85}
 
-  /* ===== POMODORO ===== */
-  .pomodoro-wrap{text-align:center;padding:20px;}
-  .timer-circle{
-    width:260px;height:260px;margin:0 auto 24px;border-radius:50%;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    background:conic-gradient(var(--primary) 0deg, var(--border) 0deg);
-    position:relative;
-  }
-  .timer-circle::before{
-    content:'';position:absolute;inset:14px;background:var(--card);border-radius:50%;
-  }
-  .timer-inner{position:relative;z-index:1;}
-  .timer-time{font-size:56px;font-weight:700;font-variant-numeric:tabular-nums;}
-  .timer-label{font-size:14px;color:var(--text-light);margin-top:4px;letter-spacing:1px;}
-  .timer-controls{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
-  .mode-switch{display:flex;gap:8px;justify-content:center;margin-bottom:24px;flex-wrap:wrap;}
-  .mode-btn{padding:8px 18px;border-radius:20px;border:1.5px solid var(--border);
-    background:transparent;color:var(--text-light);cursor:pointer;font-weight:600;font-size:13px;}
-  .mode-btn.active{background:var(--primary);color:white;border-color:var(--primary);}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
 
-  /* ===== SCHEDULE ===== */
-  table{width:100%;border-collapse:collapse;font-size:14px;}
-  th,td{padding:12px 10px;text-align:left;border-bottom:1px solid var(--border);}
-  th{font-weight:700;color:var(--text-light);font-size:12px;text-transform:uppercase;letter-spacing:.5px;}
-  tr:hover td{background:var(--bg);}
-  .subject-tag{padding:4px 10px;border-radius:8px;font-size:12px;font-weight:600;display:inline-block;}
+.stat{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:18px;transition:.25s;
+}
+.stat:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.stat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.stat-icon{
+  width:40px;height:40px;border-radius:12px;display:flex;
+  align-items:center;justify-content:center;font-size:18px;
+}
+.stat-val{font-family:'Sora',sans-serif;font-size:26px;font-weight:800;letter-spacing:-1px}
+.stat-label{font-size:13px;color:var(--text-dim);margin-top:2px}
+.stat-trend{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px}
 
-  /* ===== FLASHCARD ===== */
-  .flashcard{
-    width:100%;max-width:480px;height:260px;margin:0 auto 20px;
-    perspective:1200px;cursor:pointer;
-  }
-  .fc-inner{position:relative;width:100%;height:100%;transition:transform .7s;
-    transform-style:preserve-3d;}
-  .flashcard.flipped .fc-inner{transform:rotateY(180deg);}
-  .fc-face{
-    position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;
-    display:flex;align-items:center;justify-content:center;padding:30px;
-    font-size:20px;font-weight:600;text-align:center;
-    box-shadow:var(--shadow);border:1px solid var(--border);
-  }
-  .fc-front{background:linear-gradient(135deg,var(--primary),var(--accent));color:white;}
-  .fc-back{background:var(--card);color:var(--text);transform:rotateY(180deg);font-size:17px;}
+.chart-wrap{position:relative;height:210px;width:100%}
 
-  /* ===== GPA ===== */
-  .gpa-row{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;
-    margin-bottom:10px;align-items:center;}
-  .gpa-row input,.gpa-row select{min-width:0;}
-  .gpa-result{
-    text-align:center;padding:24px;background:linear-gradient(135deg,var(--primary),var(--accent));
-    border-radius:16px;color:white;margin-top:20px;
-  }
-  .gpa-result h2{font-size:48px;font-weight:800;}
-  .gpa-result p{opacity:.9;font-size:14px;margin-top:4px;}
+/* Tasks */
+.filter-tabs{display:flex;gap:6px;padding:4px;background:var(--surface-2);border-radius:12px;flex-wrap:wrap}
+.filter-tab{
+  padding:8px 16px;border-radius:9px;border:none;background:transparent;
+  color:var(--text-dim);font-family:inherit;font-size:13px;font-weight:600;
+  cursor:pointer;transition:.2s;
+}
+.filter-tab.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow-sm)}
 
-  /* ===== NOTES ===== */
-  .note-card{
-    background:var(--card);border-radius:14px;padding:18px;
-    border:1px solid var(--border);box-shadow:var(--shadow);position:relative;
-    transition:.2s;border-top:4px solid var(--warning);
-  }
-  .note-card:hover{transform:translateY(-3px);}
-  .note-card h4{font-size:16px;margin-bottom:8px;}
-  .note-card p{font-size:14px;color:var(--text-light);line-height:1.6;white-space:pre-wrap;}
-  .note-date{font-size:11px;color:var(--text-light);margin-top:10px;display:block;}
-  .note-del{position:absolute;top:12px;right:12px;background:none;border:none;
-    color:var(--text-light);cursor:pointer;font-size:14px;padding:4px 8px;border-radius:6px;}
-  .note-del:hover{color:var(--danger);background:rgba(225,112,85,.1);}
+.task-item{
+  display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--surface);
+  border:1px solid var(--border);border-radius:12px;margin-bottom:10px;transition:.2s;
+  border-left:3px solid var(--primary);animation:fadeUp .3s;
+}
+.task-item:hover{transform:translateX(3px);box-shadow:var(--shadow)}
+.task-item.done{opacity:.55}
+.task-item.done .task-text{text-decoration:line-through}
+.task-item.p-high{border-left-color:var(--danger)}
+.task-item.p-med{border-left-color:var(--warning)}
+.task-item.p-low{border-left-color:var(--success)}
+.task-check{
+  width:22px;height:22px;border-radius:7px;border:2px solid var(--border);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0;
+  color:transparent;font-size:12px;background:var(--surface);
+}
+.task-check:hover{border-color:var(--primary)}
+.task-check.checked{background:var(--success);border-color:var(--success);color:white}
+.task-content{flex:1;min-width:0}
+.task-text{font-size:14px;font-weight:500;word-wrap:break-word}
+.task-meta{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
+.task-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+.tag-high{background:rgba(239,68,68,.12);color:#ef4444}
+.tag-med{background:rgba(245,158,11,.12);color:#f59e0b}
+.tag-low{background:rgba(16,185,129,.12);color:#10b981}
+.tag-cat{background:var(--primary-50);color:var(--primary)}
+.tag-date{background:var(--surface-2);color:var(--text-dim)}
+.task-del{
+  width:32px;height:32px;border-radius:8px;border:none;background:transparent;
+  color:var(--text-dim);cursor:pointer;transition:.2s;font-size:15px;
+}
+.task-del:hover{background:rgba(239,68,68,.1);color:var(--danger)}
 
-  .empty{text-align:center;padding:40px;color:var(--text-light);font-size:15px;}
-  .empty-icon{font-size:48px;display:block;margin-bottom:12px;opacity:.5;}
+.input,select,textarea{
+  width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--text);font-family:inherit;font-size:14px;
+  outline:none;transition:.2s;
+}
+.input:focus,select:focus,textarea:focus{
+  border-color:var(--primary);background:var(--surface);
+  box-shadow:0 0 0 4px rgba(99,102,241,.1);
+}
+.form-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.form-row>*{flex:1;min-width:130px}
 
-  /* ===== TOAST ===== */
-  #toast{
-    position:fixed;bottom:28px;right:28px;background:var(--text);color:var(--card);
-    padding:14px 22px;border-radius:12px;font-size:14px;font-weight:600;
-    box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(120px);
-    transition:.4s;z-index:999;
-  }
-  #toast.show{transform:translateY(0);}
+/* Pomodoro */
+.pomo-card{max-width:560px;margin:0 auto;text-align:center;padding:30px}
+.pomo-tabs{display:flex;gap:8px;justify-content:center;margin-bottom:30px;flex-wrap:wrap}
+.pomo-tab{
+  padding:9px 20px;border-radius:22px;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--text-dim);font-family:inherit;
+  font-weight:600;font-size:13px;cursor:pointer;transition:.2s;
+}
+.pomo-tab.active{
+  background:linear-gradient(135deg,var(--primary),var(--primary-600));
+  color:white;border-color:transparent;box-shadow:0 8px 20px -6px rgba(99,102,241,.6);
+}
+.pomo-ring-wrap{position:relative;width:280px;height:280px;margin:0 auto 28px}
+.pomo-ring{width:100%;height:100%;transform:rotate(-90deg)}
+.pomo-ring .bg{fill:none;stroke:var(--border);stroke-width:14}
+.pomo-ring .fg{
+  fill:none;stroke:url(#pomoGrad);stroke-width:14;stroke-linecap:round;
+  transition:stroke-dashoffset .5s linear;
+}
+.pomo-time{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Sora',sans-serif;font-size:54px;font-weight:800;
+  letter-spacing:-2px;font-variant-numeric:tabular-nums;
+}
+.pomo-mode-label{
+  position:absolute;bottom:26%;left:50%;transform:translateX(-50%);
+  font-size:12px;font-weight:700;letter-spacing:2px;color:var(--text-dim);
+  text-transform:uppercase;
+}
+.pomo-controls{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.pomo-count{margin-top:24px;font-size:14px;color:var(--text-dim)}
+.pomo-count strong{color:var(--primary);font-weight:800}
 
-  @media(max-width:640px){
-    header{padding:14px 16px;}
-    .logo{font-size:17px;}
-    .logo-icon{width:34px;height:34px;font-size:18px;}
-    .clock{display:none;}
-    nav{padding:12px 16px;top:64px;}
-    main{padding:18px 16px;}
-    .timer-circle{width:210px;height:210px;}
-    .timer-time{font-size:44px;}
-    .gpa-row{grid-template-columns:1fr 1fr;gap:8px;}
-    .gpa-row button{grid-column:span 2;}
+/* Timetable */
+.tt-wrap{overflow-x:auto;padding-bottom:8px}
+.tt-grid{display:grid;grid-template-columns:80px repeat(7,1fr);gap:8px;min-width:880px}
+.tt-day{
+  text-align:center;padding:10px 4px;font-weight:700;font-size:13px;
+  color:var(--text-dim);border-radius:10px;background:var(--surface-2);
+}
+.tt-cell{
+  min-height:82px;border-radius:10px;padding:6px;background:var(--surface-2);
+  border:1px dashed var(--border);font-size:12px;transition:.2s;
+}
+.tt-cell.has{border-style:solid;background:var(--surface);border-color:var(--border)}
+.tt-slot{
+  padding:6px 8px;border-radius:7px;font-size:11px;font-weight:600;
+  margin-bottom:4px;cursor:pointer;transition:.2s;color:white;position:relative;
+}
+.tt-slot:hover{transform:scale(1.04)}
+.tt-slot .rm{font-size:10px;opacity:.85;display:block;margin-top:2px}
+.tt-slot .x{
+  position:absolute;top:3px;right:5px;opacity:0;font-size:12px;
+  cursor:pointer;transition:.2s;
+}
+.tt-slot:hover .x{opacity:1}
+
+/* Flashcards */
+.fc-stage{
+  perspective:1200px;width:100%;max-width:480px;height:260px;
+  margin:0 auto 20px;cursor:pointer;
+}
+.fc-inner{
+  position:relative;width:100%;height:100%;
+  transition:transform .7s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;
+}
+.fc-stage.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-face{
+  position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;
+  display:flex;align-items:center;justify-content:center;padding:30px;
+  text-align:center;font-size:20px;font-weight:600;line-height:1.5;
+  box-shadow:var(--shadow-lg);
+}
+.fc-front{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white}
+.fc-back{
+  background:var(--surface);color:var(--text);border:1px solid var(--border);
+  transform:rotateY(180deg);font-size:17px;font-weight:500;
+}
+.fc-hint{position:absolute;bottom:16px;font-size:11px;opacity:.65;font-weight:500}
+
+/* GPA */
+.gpa-row{display:grid;grid-template-columns:2fr 1fr 1.2fr auto;gap:10px;margin-bottom:10px;align-items:center}
+.gpa-head{
+  display:grid;grid-template-columns:2fr 1fr 1.2fr auto;gap:10px;
+  font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;
+  margin-bottom:10px;letter-spacing:.5px;
+}
+.gpa-result{
+  margin-top:20px;padding:28px;border-radius:var(--radius);
+  background:linear-gradient(135deg,#6366f1,#06b6d4);color:white;text-align:center;
+  box-shadow:0 20px 40px -20px rgba(99,102,241,.5);
+}
+.gpa-result .val{
+  font-family:'Sora',sans-serif;font-size:52px;font-weight:800;letter-spacing:-2px;
+}
+.gpa-result .lbl{font-size:13px;opacity:.85;margin-top:4px}
+
+/* Notes */
+.notes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.note{
+  border-radius:var(--radius);padding:18px;position:relative;min-height:170px;
+  display:flex;flex-direction:column;box-shadow:var(--shadow-sm);transition:.25s;
+  color:#1f2937;
+}
+.note:hover{transform:translateY(-4px) rotate(-.5deg);box-shadow:var(--shadow)}
+.note h4{font-size:15px;font-weight:700;margin-bottom:8px;color:#111827;padding-right:24px}
+.note p{font-size:13px;line-height:1.6;color:#374151;flex:1;white-space:pre-wrap;word-wrap:break-word}
+.note .date{font-size:10px;color:#6b7280;margin-top:10px;opacity:.75}
+.note .del{
+  position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:7px;
+  border:none;background:rgba(0,0,0,.08);color:#374151;cursor:pointer;font-size:13px;
+  opacity:0;transition:.2s;
+}
+.note:hover .del{opacity:1}
+.note .del:hover{background:rgba(239,68,68,.25);color:#ef4444}
+
+/* Habits */
+.habit-head{
+  display:grid;grid-template-columns:1.6fr repeat(7,1fr) 40px;gap:8px;
+  font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;
+  padding:0 0 10px;border-bottom:1px solid var(--border);letter-spacing:.5px;
+}
+.habit-head>div{text-align:center}
+.habit-head>div:first-child{text-align:left}
+.habit-row{
+  display:grid;grid-template-columns:1.6fr repeat(7,1fr) 40px;gap:8px;
+  align-items:center;padding:12px 0;border-bottom:1px solid var(--border);
+}
+.habit-row:last-child{border-bottom:none}
+.habit-name{font-weight:600;font-size:14px}
+.habit-day{
+  aspect-ratio:1;border-radius:9px;background:var(--surface-2);border:1px solid var(--border);
+  cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:transparent;max-width:44px;justify-self:center;width:100%;
+}
+.habit-day:hover{border-color:var(--success);transform:scale(1.08)}
+.habit-day.done{
+  background:linear-gradient(135deg,var(--success),#059669);
+  border-color:transparent;color:white;
+}
+.habit-del{
+  width:32px;height:32px;border-radius:8px;border:none;background:transparent;
+  color:var(--text-dim);cursor:pointer;font-size:14px;transition:.2s;
+}
+.habit-del:hover{background:rgba(239,68,68,.1);color:var(--danger)}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;right:24px;background:var(--text);color:var(--surface);
+  padding:14px 20px;border-radius:12px;font-size:14px;font-weight:600;
+  box-shadow:var(--shadow-lg);transform:translateY(100px);opacity:0;
+  transition:.35s cubic-bezier(.4,.2,.2,1);z-index:999;
+  display:flex;align-items:center;gap:10px;
+}
+.toast.show{transform:translateY(0);opacity:1}
+
+.empty{text-align:center;padding:36px 20px;color:var(--text-dim);font-size:14px}
+.empty-icon{font-size:42px;display:block;margin-bottom:10px;opacity:.4}
+
+/* Responsive */
+@media(max-width:900px){
+  .app{grid-template-columns:1fr}
+  .sidebar{
+    position:fixed;top:0;left:0;bottom:0;width:260px;z-index:200;
+    transform:translateX(-100%);transition:transform .3s;box-shadow:var(--shadow-lg);
   }
+  .sidebar.open{transform:translateX(0)}
+  .menu-btn{display:flex;align-items:center;justify-content:center}
+  .content{padding:20px}
+  .topbar{padding:14px 20px}
+  .search-wrap{display:none}
+  .banner{padding:22px}
+  .banner h2{font-size:20px}
+  .page-title h1{font-size:22px}
+}
+@media(max-width:560px){
+  .stat-val{font-size:22px}
+  .pomo-ring-wrap{width:240px;height:240px}
+  .pomo-time{font-size:44px}
+  .gpa-row,.gpa-head{grid-template-columns:1fr 1fr;gap:8px}
+  .gpa-row>*:first-child,.gpa-head>*:first-child{grid-column:span 2}
+  .gpa-row>button{grid-column:span 2}
+  .gpa-head>*:nth-child(3),.gpa-head>*:nth-child(4){display:none}
+}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">
-    <div class="logo-icon">📚</div>
-    <span>StudyHub</span>
-  </div>
-  <div class="header-actions">
-    <div class="clock" id="clock"></div>
-    <button class="btn-icon" id="themeBtn" title="Đổi chế độ sáng/tối">🌙</button>
-  </div>
-</header>
-
-<nav>
-  <button class="tab active" data-view="dashboard">🏠 Tổng quan</button>
-  <button class="tab" data-view="todo">✅ Công việc</button>
-  <button class="tab" data-view="pomodoro">⏱️ Pomodoro</button>
-  <button class="tab" data-view="schedule">📅 Thời khóa biểu</button>
-  <button class="tab" data-view="flashcard">🃏 Flashcard</button>
-  <button class="tab" data-view="gpa">🎯 Tính GPA</button>
-  <button class="tab" data-view="notes">📝 Ghi chú</button>
-</nav>
-
-<main>
-
-  <!-- ===== DASHBOARD ===== -->
-  <section class="view active" id="dashboard">
-    <h2 class="section-title">Tổng quan hôm nay</h2>
-    <div class="grid grid-4" style="margin-bottom:28px;">
-      <div class="card stat-card">
-        <div class="stat-icon purple">📋</div>
-        <div class="stat-info"><h3 id="statTasks">0</h3><p>Việc chưa xong</p></div>
-      </div>
-      <div class="card stat-card">
-        <div class="stat-icon teal">⏱️</div>
-        <div class="stat-info"><h3 id="statPomo">0</h3><p>Phiên Pomodoro</p></div>
-      </div>
-      <div class="card stat-card">
-        <div class="stat-icon green">🃏</div>
-        <div class="stat-info"><h3 id="statCards">0</h3><p>Flashcard</p></div>
-      </div>
-      <div class="card stat-card">
-        <div class="stat-icon orange">📝</div>
-        <div class="stat-info"><h3 id="statNotes">0</h3><p>Ghi chú</p></div>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-logo">📚</div>
+      <div>
+        <div class="brand-name">StudyFlow</div>
+        <div class="brand-sub">Học tập thông minh</div>
       </div>
     </div>
-
-    <div class="grid grid-2">
-      <div class="card">
-        <h3 style="margin-bottom:16px;font-size:17px;">🔥 Việc cần làm hôm nay</h3>
-        <div id="dashTodos"></div>
-      </div>
-      <div class="card">
-        <h3 style="margin-bottom:16px;font-size:17px;">📖 Lịch học hôm nay</h3>
-        <div id="dashSchedule"></div>
-      </div>
+    <div class="nav-label">Menu chính</div>
+    <nav class="nav">
+      <button class="nav-item active" data-view="dashboard"><span class="nav-icon">🏠</span>Tổng quan<span class="nav-key">1</span></button>
+      <button class="nav-item" data-view="tasks"><span class="nav-icon">✅</span>Công việc<span class="nav-key">2</span></button>
+      <button class="nav-item" data-view="pomodoro"><span class="nav-icon">⏱️</span>Pomodoro<span class="nav-key">3</span></button>
+      <button class="nav-item" data-view="timetable"><span class="nav-icon">📅</span>Thời khóa biểu<span class="nav-key">4</span></button>
+      <button class="nav-item" data-view="flashcards"><span class="nav-icon">🃏</span>Flashcards<span class="nav-key">5</span></button>
+      <button class="nav-item" data-view="gpa"><span class="nav-icon">🎯</span>Tính GPA<span class="nav-key">6</span></button>
+      <button class="nav-item" data-view="notes"><span class="nav-icon">📝</span>Ghi chú<span class="nav-key">7</span></button>
+      <button class="nav-item" data-view="habits"><span class="nav-icon">🔥</span>Thói quen<span class="nav-key">8</span></button>
+    </nav>
+    <div class="sidebar-card">
+      <h4>💡 Mẹo hôm nay</h4>
+      <p id="tipText">Học 25 phút, nghỉ 5 phút để tập trung cao độ.</p>
+      <button onclick="randomTip()">Đổi mẹo khác →</button>
     </div>
+  </aside>
 
-    <div class="card" style="margin-top:20px;">
-      <h3 style="margin-bottom:14px;font-size:17px;">💡 Mẹo học tập hiệu quả</h3>
-      <p id="studyTip" style="line-height:1.8;color:var(--text-light);font-size:15px;"></p>
-      <button class="btn btn-ghost" style="margin-top:14px;" onclick="randomTip()">🎲 Đổi mẹo khác</button>
-    </div>
-  </section>
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <div class="search-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Tìm kiếm công việc, ghi chú..." id="globalSearch">
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" id="themeBtn" title="Đổi chủ đề">🌙</button>
+        <button class="icon-btn keep" title="Thông báo">🔔<span class="dot"></span></button>
+        <div class="avatar" title="Sinh viên">SV</div>
+      </div>
+    </header>
 
-  <!-- ===== TODO ===== -->
-  <section class="view" id="todo">
-    <h2 class="section-title">Quản lý công việc</h2>
-    <div class="card" style="margin-bottom:20px;">
-      <div class="input-group">
-        <input type="text" id="todoInput" placeholder="Nhập công việc mới..." style="flex:2;">
-        <select id="todoPriority" style="flex:0 0 140px;">
-          <option value="low">🟢 Thấp</option>
-          <option value="med" selected>🟡 Trung bình</option>
-          <option value="high">🔴 Cao</option>
-        </select>
-        <button class="btn btn-primary" onclick="addTodo()">＋ Thêm</button>
-      </div>
-    </div>
-    <div class="grid grid-2">
-      <div class="card">
-        <h3 style="margin-bottom:16px;font-size:17px;">⏳ Chưa hoàn thành</h3>
-        <div id="todoList"></div>
-      </div>
-      <div class="card">
-        <h3 style="margin-bottom:16px;font-size:17px;">✅ Đã hoàn thành</h3>
-        <div id="doneList"></div>
-      </div>
-    </div>
-  </section>
+    <div class="content" id="content">
 
-  <!-- ===== POMODORO ===== -->
-  <section class="view" id="pomodoro">
-    <h2 class="section-title">Đồng hồ Pomodoro</h2>
-    <div class="card pomodoro-wrap" style="max-width:600px;margin:0 auto;">
-      <div class="mode-switch">
-        <button class="mode-btn active" data-min="25" data-label="TẬP TRUNG">🎯 Tập trung 25'</button>
-        <button class="mode-btn" data-min="5" data-label="NGHỈ NGẮN">☕ Nghỉ 5'</button>
-        <button class="mode-btn" data-min="15" data-label="NGHỈ DÀI">🛋️ Nghỉ 15'</button>
-      </div>
-      <div class="timer-circle" id="timerCircle">
-        <div class="timer-inner">
-          <div class="timer-time" id="timerTime">25:00</div>
-          <div class="timer-label" id="timerLabel">TẬP TRUNG</div>
+      <!-- ========== DASHBOARD ========== -->
+      <section class="view active" data-page="dashboard">
+        <div class="banner">
+          <div class="banner-content">
+            <h2 id="greeting">Chào buổi sáng! 👋</h2>
+            <p id="dateText">Hôm nay là...</p>
+            <div class="banner-stats">
+              <div class="banner-stat"><span>🔥</span><div><div class="val" id="bannerStreak">0</div><div class="lbl">Ngày liên tục</div></div></div>
+              <div class="banner-stat"><span>⏱️</span><div><div class="val" id="bannerPomo">0</div><div class="lbl">Phiên hôm nay</div></div></div>
+              <div class="banner-stat"><span>✅</span><div><div class="val" id="bannerTasks">0</div><div class="lbl">Việc chưa xong</div></div></div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="timer-controls">
-        <button class="btn btn-primary" id="startBtn" onclick="toggleTimer()">▶ Bắt đầu</button>
-        <button class="btn btn-ghost" onclick="resetTimer()">↺ Đặt lại</button>
-      </div>
-      <p style="margin-top:20px;color:var(--text-light);font-size:14px;">
-        Đã hoàn thành hôm nay: <strong id="pomoCount" style="color:var(--primary);">0</strong> phiên
-      </p>
-    </div>
-  </section>
 
-  <!-- ===== SCHEDULE ===== -->
-  <section class="view" id="schedule">
-    <h2 class="section-title">Thời khóa biểu</h2>
-    <div class="card" style="margin-bottom:20px;">
-      <div class="input-group">
-        <select id="schDay" style="flex:0 0 140px;">
-          <option>Thứ 2</option><option>Thứ 3</option><option>Thứ 4</option>
-          <option>Thứ 5</option><option>Thứ 6</option><option>Thứ 7</option><option>Chủ nhật</option>
-        </select>
-        <input type="text" id="schSubject" placeholder="Tên môn học" style="flex:2;">
-        <input type="text" id="schRoom" placeholder="Phòng" style="flex:1;">
-        <input type="time" id="schStart" style="flex:1;">
-        <input type="time" id="schEnd" style="flex:1;">
-        <button class="btn btn-primary" onclick="addSchedule()">＋ Thêm</button>
-      </div>
-    </div>
-    <div class="card" style="overflow-x:auto;">
-      <table>
-        <thead>
-          <tr><th>Thứ</th><th>Môn học</th><th>Phòng</th><th>Thời gian</th><th></th></tr>
-        </thead>
-        <tbody id="scheduleBody"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ===== FLASHCARD ===== -->
-  <section class="view" id="flashcard">
-    <h2 class="section-title">Flashcard ghi nhớ</h2>
-    <div class="grid grid-2">
-      <div class="card">
-        <h3 style="margin-bottom:16px;font-size:17px;">➕ Tạo thẻ mới</h3>
-        <input type="text" id="fcQ" placeholder="Câu hỏi / Thuật ngữ" style="width:100%;margin-bottom:12px;">
-        <textarea id="fcA" placeholder="Câu trả lời / Định nghĩa"></textarea>
-        <button class="btn btn-primary" style="margin-top:12px;width:100%;justify-content:center;"
-          onclick="addFlashcard()">Thêm flashcard</button>
-      </div>
-      <div class="card">
-        <h3 style="margin-bottom:16px;font-size:17px;">🎴 Ôn tập</h3>
-        <div id="fcArea">
-          <div class="empty"><span class="empty-icon">🃏</span>Chưa có flashcard nào</div>
+        <div class="grid-4">
+          <div class="stat">
+            <div class="stat-head"><div class="stat-icon" style="background:rgba(99,102,241,.12);color:#6366f1">📋</div></div>
+            <div class="stat-val" id="sTasks">0</div>
+            <div class="stat-label">Việc cần làm</div>
+          </div>
+          <div class="stat">
+            <div class="stat-head"><div class="stat-icon" style="background:rgba(6,182,212,.12);color:#06b6d4">⏱️</div></div>
+            <div class="stat-val" id="sPomo">0</div>
+            <div class="stat-label">Phiên Pomodoro hôm nay</div>
+          </div>
+          <div class="stat">
+            <div class="stat-head"><div class="stat-icon" style="background:rgba(16,185,129,.12);color:#10b981">🃏</div></div>
+            <div class="stat-val" id="sCards">0</div>
+            <div class="stat-label">Flashcard</div>
+          </div>
+          <div class="stat">
+            <div class="stat-head"><div class="stat-icon" style="background:rgba(245,158,11,.12);color:#f59e0b">📝</div></div>
+            <div class="stat-val" id="sNotes">0</div>
+            <div class="stat-label">Ghi chú</div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="card" style="margin-top:20px;">
-      <h3 style="margin-bottom:14px;font-size:17px;">📚 Danh sách thẻ (<span id="fcTotal">0</span>)</h3>
-      <div id="fcList"></div>
-    </div>
-  </section>
 
-  <!-- ===== GPA ===== -->
-  <section class="view" id="gpa">
-    <h2 class="section-title">Tính điểm GPA</h2>
-    <div class="card">
-      <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;
-        font-size:12px;font-weight:700;color:var(--text-light);
-        text-transform:uppercase;margin-bottom:12px;">
-        <span>Môn học</span><span>Số tín chỉ</span><span>Điểm hệ 10</span><span></span>
-      </div>
-      <div id="gpaRows"></div>
-      <button class="btn btn-ghost" style="margin-top:12px;" onclick="addGpaRow()">＋ Thêm môn</button>
-      <button class="btn btn-primary" style="margin-top:12px;margin-left:8px;" onclick="calcGpa()">🧮 Tính GPA</button>
-      <div class="gpa-result" id="gpaResult" style="display:none;">
-        <p>GPA hệ 4.0 của bạn</p>
-        <h2 id="gpaValue">0.00</h2>
-        <p id="gpaExtra"></p>
-      </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">📊 Thời gian học tuần này</div>
+            <div class="chart-wrap"><canvas id="weekChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title">🕐 Lịch học hôm nay</div>
+            <div id="todaySchedule"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+          <div class="card-title">🔥 Việc cần làm gấp</div>
+          <div id="dashTasks"></div>
+        </div>
+      </section>
+
+      <!-- ========== TASKS ========== -->
+      <section class="view" data-page="tasks">
+        <div class="page-head">
+          <div class="page-title">
+            <h1>Công việc</h1>
+            <p>Quản lý và theo dõi tiến độ học tập của bạn</p>
+          </div>
+          <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">Tất cả</button>
+            <button class="filter-tab" data-filter="active">Đang làm</button>
+            <button class="filter-tab" data-filter="done">Hoàn thành</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px">
+          <div class="form-row">
+            <input type="text" class="input" id="taskInput" placeholder="Nhập công việc mới..." style="flex:2;min-width:220px">
+            <select id="taskPriority" style="flex:0 0 140px">
+              <option value="low">🟢 Thấp</option>
+              <option value="med" selected>🟡 Trung bình</option>
+              <option value="high">🔴 Cao</option>
+            </select>
+            <select id="taskCat" style="flex:0 0 140px">
+              <option>📚 Học tập</option>
+              <option>📝 Bài tập</option>
+              <option>📖 Đọc sách</option>
+              <option>🎯 Cá nhân</option>
+            </select>
+            <input type="date" id="taskDate" style="flex:0 0 150px">
+            <button class="btn btn-primary" onclick="addTask()">＋ Thêm</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div id="taskList"></div>
+        </div>
+      </section>
+
+      <!-- ========== POMODORO ========== -->
+      <section class="view" data-page="pomodoro">
+        <div class="page-head">
+          <div class="page-title">
+            <h1>Pomodoro</h1>
+            <p>Tập trung sâu với kỹ thuật Pomodoro</p>
+          </div>
+        </div>
+
+        <div class="card pomo-card">
+          <div class="pomo-tabs">
+            <button class="pomo-tab active" data-min="25" data-label="TẬP TRUNG">🎯 Tập trung 25'</button>
+            <button class="pomo-tab" data-min="5" data-label="NGHỈ NGẮN">☕ Nghỉ ngắn 5'</button>
+            <button class="pomo-tab" data-min="15" data-label="NGHỈ DÀI">🛋️ Nghỉ dài 15'</button>
+          </div>
+          <div class="pomo-ring-wrap">
+            <svg class="pomo-ring" viewBox="0 0 280 280">
+              <defs>
+                <linearGradient id="pomoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#6366f1"/>
+                  <stop offset="100%" stop-color="#06b6d4"/>
+                </linearGradient>
+              </defs>
+              <circle class="bg" cx="140" cy="140" r="126"/>
+              <circle class="fg" id="pomoRing" cx="140" cy="140" r="126"
+                stroke-dasharray="791.68" stroke-dashoffset="0"/>
+            </svg>
+            <div class="pomo-time" id="pomoTime">25:00</div>
+            <div class="pomo-mode-label" id="pomoLabel">TẬP TRUNG</div>
+          </div>
+          <div class="pomo-controls">
+            <button class="btn btn-primary" id="pomoStart" onclick="togglePomo()">▶ Bắt đầu</button>
+            <button class="btn btn-ghost" onclick="resetPomo()">↺ Đặt lại</button>
+          </div>
+          <div class="pomo-count">Đã hoàn thành hôm nay: <strong id="pomoCount">0</strong> phiên</div>
+        </div>
+      </section>
+
+      <!-- ========== TIMETABLE ========== -->
+      <section class="view" data-page="timetable">
+        <div class="page-head">
+          <div class="page-title">
+            <h1>Thời khóa biểu</h1>
+            <p>Lịch học theo tuần của bạn</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px">
+          <div class="form-row">
+            <select id="schDay" style="flex:0 0 130px">
+              <option>Thứ 2</option><option>Thứ 3</option><option>Thứ 4</option>
+              <option>Thứ 5</option><option>Thứ 6</option><option>Thứ 7</option><option>Chủ nhật</option>
+            </select>
+            <input type="text" class="input" id="schSubject" placeholder="Tên môn học" style="flex:2">
+            <input type="text" class="input" id="schRoom" placeholder="Phòng" style="flex:1">
+            <input type="time" class="input" id="schStart" style="flex:1" value="07:30">
+            <input type="time" class="input" id="schEnd" style="flex:1" value="09:30">
+            <button class="btn btn-primary" onclick="addSchedule()">＋ Thêm</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="tt-wrap"><div class="tt-grid" id="ttGrid"></div></div>
+        </div>
+      </section>
+
+      <!-- ========== FLASHCARDS ========== -->
+      <section class="view" data-page="flashcards">
+        <div class="page-head">
+          <div class="page-title">
+            <h1>Flashcards</h1>
+            <p>Ghi nhớ kiến thức nhanh chóng với thẻ lật</p>
+          </div>
+          <div style="color:var(--text-dim);font-size:14px">Tổng: <strong id="fcTotal" style="color:var(--primary)">0</strong> thẻ</div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">➕ Tạo thẻ mới</div>
+            <input type="text" class="input" id="fcQ" placeholder="Câu hỏi / Thuật ngữ" style="margin-bottom:12px">
+            <textarea id="fcA" rows="4" placeholder="Câu trả lời / Định nghĩa"></textarea>
+            <button class="btn btn-primary" style="margin-top:12px;width:100%;justify-content:center" onclick="addFlashcard()">Thêm flashcard</button>
+          </div>
+
+          <div class="card">
+            <div class="card-title">🎴 Ôn tập</div>
+            <div id="fcArea"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+          <div class="card-title">📚 Danh sách thẻ</div>
+          <div id="fcList"></div>
+        </div>
+      </section>
+
+      <!-- ========== GPA ========== -->
+      <section class="view" data-page="gpa">
+        <div class="page-head">
+          <div class="page-title">
+            <h1>Tính điểm GPA</h1>
+            <p>Quy đổi điểm hệ 10 sang hệ 4.0</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="gpa-head">
+            <div>Môn học</div><div>Số tín chỉ</div><div>Điểm hệ 10</div><div></div>
+          </div>
+          <div id="gpaRows"></div>
+          <button class="btn btn-ghost" style="margin-top:12px" onclick="addGpaRow()">＋ Thêm môn</button>
+          <button class="btn btn-primary" style="margin-top:12px;margin-left:8px" onclick="calcGpa()">🧮 Tính GPA</button>
+          <div class="gpa-result" id="gpaResult" style="display:none">
+            <div class="lbl">GPA hệ 4.0 của bạn</div>
+            <div class="val" id="gpaValue">0.00</div>
+            <div class="lbl" id="gpaExtra"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== NOTES ========== -->
+      <section class="view" data-page="notes">
+        <div class="page-head">
+          <div class="page-title">
+            <h1>Ghi chú</h1>
+            <p>Lưu lại những ý tưởng và kiến thức quan trọng</p>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <span style="font-size:13px;color:var(--text-dim)">Màu:</span>
+            <div id="colorPicker" style="display:flex;gap:6px"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px">
+          <input type="text" class="input" id="noteTitle" placeholder="Tiêu đề ghi chú..." style="margin-bottom:12px">
+          <textarea id="noteContent" rows="4" placeholder="Nội dung ghi chú..."></textarea>
+          <button class="btn btn-primary" style="margin-top:12px" onclick="addNote()">💾 Lưu ghi chú</button>
+        </div>
+
+        <div class="notes-grid" id="notesList"></div>
+      </section>
+
+      <!-- ========== HABITS ========== -->
+      <section class="view" data-page="habits">
+        <div class="page-head">
+          <div class="page-title">
+            <h1>Thói quen</h1>
+            <p>Theo dõi thói quen học tập hàng tuần</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px">
+          <div class="form-row">
+            <input type="text" class="input" id="habitInput" placeholder="Nhập thói quen mới (ví dụ: Đọc sách 30 phút)" style="flex:3">
+            <button class="btn btn-primary" onclick="addHabit()">＋ Thêm thói quen</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="habit-head">
+            <div>Thói quen</div>
+            <div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div>
+            <div></div>
+          </div>
+          <div id="habitList"></div>
+        </div>
+      </section>
+
     </div>
-  </section>
+  </main>
+</div>
 
-  <!-- ===== NOTES ===== -->
-  <section class="view" id="notes">
-    <h2 class="section-title">Ghi chú cá nhân</h2>
-    <div class="card" style="margin-bottom:20px;">
-      <input type="text" id="noteTitle" placeholder="Tiêu đề ghi chú..." style="width:100%;margin-bottom:12px;">
-      <textarea id="noteContent" placeholder="Nội dung ghi chú..."></textarea>
-      <button class="btn btn-primary" style="margin-top:12px;" onclick="addNote()">💾 Lưu ghi chú</button>
-    </div>
-    <div class="grid grid-3" id="notesList"></div>
-  </section>
-
-</main>
-
-<div id="toast"></div>
+<div class="toast" id="toast"></div>
 
 <script>
-/* ============ HELPERS ============ */
+/* ============ UTILS ============ */
 const $ = id => document.getElementById(id);
-const store = {
-  get(k, def){ try{ return JSON.parse(localStorage.getItem(k)) ?? def; }catch{ return def; } },
-  set(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
+const DB = {
+  get(k, d){ try{ const v = JSON.parse(localStorage.getItem('sf_'+k)); return v ?? d; }catch{ return d; } },
+  set(k, v){ localStorage.setItem('sf_'+k, JSON.stringify(v)); }
 };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let toastTimer;
 function toast(msg){
   const t = $('toast');
-  t.textContent = msg; t.classList.add('show');
-  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('show'), 2200);
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
 }
-function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-
-/* ============ CLOCK ============ */
-function tick(){
+const todayKey = () => new Date().toISOString().slice(0,10);
+const weekKey = () => {
   const d = new Date();
-  const days = ['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
-  $('clock').textContent = `${days[d.getDay()]}, ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')} • ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
-}
-setInterval(tick,1000); tick();
+  const onejan = new Date(d.getFullYear(), 0, 1);
+  return d.getFullYear() + '-W' + Math.ceil((((d - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+};
 
 /* ============ THEME ============ */
 const themeBtn = $('themeBtn');
-if(store.get('theme','light') === 'dark'){ document.body.classList.add('dark'); themeBtn.textContent='☀️'; }
+if(DB.get('theme','light') === 'dark'){
+  document.documentElement.setAttribute('data-theme','dark');
+  themeBtn.textContent = '☀️';
+}
 themeBtn.onclick = () => {
-  document.body.classList.toggle('dark');
-  const dark = document.body.classList.contains('dark');
-  themeBtn.textContent = dark ? '☀️' : '🌙';
-  store.set('theme', dark ? 'dark' : 'light');
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+  DB.set('theme', next);
+  drawChart();
 };
 
-/* ============ NAV ============ */
-document.querySelectorAll('.tab').forEach(tab=>{
+/* ============ NAVIGATION ============ */
+function goTo(view){
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === view));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.dataset.page === view));
+  $('sidebar').classList.remove('open');
+  if(view === 'dashboard') renderDashboard();
+  if(view === 'tasks') renderTasks();
+  if(view === 'timetable') renderTimetable();
+  if(view === 'flashcards') renderFlashcards();
+  if(view === 'notes') renderNotes();
+  if(view === 'habits') renderHabits();
+  if(view === 'dashboard') setTimeout(drawChart, 50);
+}
+document.querySelectorAll('.nav-item').forEach(n => n.onclick = () => goTo(n.dataset.view));
+
+/* Keyboard shortcuts */
+document.addEventListener('keydown', e => {
+  if(e.target.matches('input,textarea,select')) return;
+  const map = {'1':'dashboard','2':'tasks','3':'pomodoro','4':'timetable','5':'flashcards','6':'gpa','7':'notes','8':'habits'};
+  if(map[e.key]) goTo(map[e.key]);
+});
+
+/* ============ TIPS ============ */
+const TIPS = [
+  'Sử dụng kỹ thuật Pomodoro: học 25 phút, nghỉ 5 phút để duy trì tập trung cao độ.',
+  'Ôn tập theo Spaced Repetition — ôn lại sau 1 ngày, 3 ngày, 1 tuần.',
+  'Dạy lại kiến thức cho người khác là cách học hiệu quả nhất (Feynman).',
+  'Học vào buổi sáng sớm khi não bộ minh mẫn sẽ ghi nhớ tốt hơn.',
+  'Chia nhỏ mục tiêu lớn thành các bước nhỏ để dễ bắt đầu và duy trì động lực.',
+  'Ngủ đủ 7-8 tiếng giúp củng cố trí nhớ dài hạn.',
+  'Tránh học nhồi nhét trước kỳ thi, hãy học đều đặn mỗi ngày.',
+  'Ghi chú bằng tay giúp ghi nhớ tốt hơn so với gõ máy tính.',
+  'Loại bỏ điện thoại khỏi bàn học để tránh xao nhãng.',
+  'Uống đủ nước và vận động nhẹ giữa các giờ học để tăng tỉnh táo.',
+  'Sử dụng sơ đồ tư duy (mindmap) để hệ thống hóa kiến thức.',
+  'Học nhóm có thể giúp bạn hiểu sâu hơn qua việc thảo luận.'
+];
+function randomTip(){
+  $('tipText').textContent = TIPS[Math.floor(Math.random() * TIPS.length)];
+}
+randomTip();
+
+/* ============ TASKS ============ */
+let tasks = DB.get('tasks', []);
+let taskFilter = 'all';
+const priLabel = { high:'Cao', med:'TB', low:'Thấp' };
+
+function addTask(){
+  const text = $('taskInput').value.trim();
+  if(!text){ toast('⚠️ Vui lòng nhập công việc'); return; }
+  tasks.push({
+    id: Date.now(),
+    text,
+    priority: $('taskPriority').value,
+    category: $('taskCat').value,
+    due: $('taskDate').value || '',
+    done: false
+  });
+  DB.set('tasks', tasks);
+  $('taskInput').value = '';
+  $('taskDate').value = '';
+  renderTasks();
+  renderDashboard();
+  toast('✅ Đã thêm công việc');
+}
+$('taskInput').addEventListener('keypress', e => { if(e.key === 'Enter') addTask(); });
+
+function toggleTask(id){
+  const t = tasks.find(x => x.id === id);
+  if(t){ t.done = !t.done; DB.set('tasks', tasks); renderTasks(); renderDashboard(); }
+}
+function delTask(id){
+  tasks = tasks.filter(t => t.id !== id);
+  DB.set('tasks', tasks); renderTasks(); renderDashboard();
+}
+function taskHTML(t){
+  const overdue = t.due && t.due < todayKey() && !t.done;
+  return `<div class="task-item ${t.done ? 'done' : ''} p-${t.priority}">
+    <div class="task-check ${t.done ? 'checked' : ''}" onclick="toggleTask(${t.id})">✓</div>
+    <div class="task-content">
+      <div class="task-text">${esc(t.text)}</div>
+      <div class="task-meta">
+        <span class="task-tag tag-${t.priority}">${priLabel[t.priority]}</span>
+        <span class="task-tag tag-cat">${esc(t.category)}</span>
+        ${t.due ? `<span class="task-tag tag-date" style="${overdue ? 'background:rgba(239,68,68,.12);color:#ef4444' : ''}">📅 ${t.due}</span>` : ''}
+      </div>
+    </div>
+    <button class="task-del" onclick="delTask(${t.id})">🗑</button>
+  </div>`;
+}
+function renderTasks(){
+  let list = tasks;
+  if(taskFilter === 'active') list = tasks.filter(t => !t.done);
+  if(taskFilter === 'done') list = tasks.filter(t => t.done);
+  const search = $('globalSearch').value.trim().toLowerCase();
+  if(search) list = list.filter(t => t.text.toLowerCase().includes(search));
+  list = [...list].sort((a,b) => {
+    if(a.done !== b.done) return a.done ? 1 : -1;
+    const order = { high:0, med:1, low:2 };
+    return order[a.priority] - order[b.priority];
+  });
+  $('taskList').innerHTML = list.length
+    ? list.map(taskHTML).join('')
+    : '<div class="empty"><span class="empty-icon">🎉</span>Không có công việc nào</div>';
+}
+document.querySelectorAll('.filter-tab').forEach(tab => {
   tab.onclick = () => {
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
-    $(tab.dataset.view).classList.add('active');
-    if(tab.dataset.view === 'dashboard') renderDashboard();
+    taskFilter = tab.dataset.filter;
+    renderTasks();
   };
 });
 
-/* ============ TODO ============ */
-let todos = store.get('todos', []);
-function addTodo(){
-  const text = $('todoInput').value.trim();
-  if(!text){ toast('⚠️ Vui lòng nhập công việc'); return; }
-  todos.push({ id: Date.now(), text, priority: $('todoPriority').value, done:false });
-  store.set('todos', todos);
-  $('todoInput').value = '';
-  renderTodos(); renderDashboard();
-  toast('✅ Đã thêm công việc');
-}
-$('todoInput').addEventListener('keypress', e => { if(e.key === 'Enter') addTodo(); });
+/* ============ POMODORO ============ */
+const CIRC = 2 * Math.PI * 126;
+let pomoTotal = 25 * 60, pomoLeft = pomoTotal, pomoRunning = false;
+let pomoInterval = null, pomoLabel = 'TẬP TRUNG';
+let pomoCount = DB.get('pomoCount_' + todayKey(), 0);
+let pomoHistory = DB.get('pomoHistory', {});
 
-function toggleTodo(id){
-  const t = todos.find(x=>x.id===id);
-  if(t){ t.done = !t.done; store.set('todos',todos); renderTodos(); renderDashboard(); }
-}
-function delTodo(id){
-  todos = todos.filter(x=>x.id!==id);
-  store.set('todos',todos); renderTodos(); renderDashboard();
-}
-const priLabel = { high:'Cao', med:'TB', low:'Thấp' };
-function todoHTML(t){
-  return `<div class="todo-item ${t.done?'done':''}">
-    <div class="todo-check ${t.done?'checked':''}" onclick="toggleTodo(${t.id})">✓</div>
-    <span class="todo-text">${esc(t.text)}</span>
-    <span class="todo-priority p-${t.priority}">${priLabel[t.priority]}</span>
-    <button class="todo-del" onclick="delTodo(${t.id})">🗑</button>
-  </div>`;
-}
-function renderTodos(){
-  const open = todos.filter(t=>!t.done), done = todos.filter(t=>t.done);
-  $('todoList').innerHTML = open.length ? open.map(todoHTML).join('')
-    : '<div class="empty"><span class="empty-icon">🎉</span>Không còn việc nào!</div>';
-  $('doneList').innerHTML = done.length ? done.map(todoHTML).join('')
-    : '<div class="empty"><span class="empty-icon">📭</span>Chưa có việc hoàn thành</div>';
-}
+$('pomoCount').textContent = pomoCount;
 
-/* ============ SCHEDULE ============ */
-let schedule = store.get('schedule', []);
+document.querySelectorAll('.pomo-tab').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.pomo-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    clearInterval(pomoInterval); pomoRunning = false;
+    $('pomoStart').textContent = '▶ Bắt đầu';
+    pomoTotal = pomoLeft = parseInt(tab.dataset.min) * 60;
+    pomoLabel = tab.dataset.label;
+    updatePomoUI();
+  };
+});
+function updatePomoUI(){
+  const m = Math.floor(pomoLeft / 60), s = pomoLeft % 60;
+  $('pomoTime').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  $('pomoLabel').textContent = pomoLabel;
+  const progress = 1 - pomoLeft / pomoTotal;
+  $('pomoRing').style.strokeDashoffset = -(CIRC * progress);
+}
+function togglePomo(){
+  if(pomoRunning){
+    clearInterval(pomoInterval); pomoRunning = false;
+    $('pomoStart').textContent = '▶ Tiếp tục';
+  } else {
+    pomoRunning = true;
+    $('pomoStart').textContent = '⏸ Tạm dừng';
+    pomoInterval = setInterval(() => {
+      pomoLeft--;
+      updatePomoUI();
+      if(pomoLeft <= 0){
+        clearInterval(pomoInterval); pomoRunning = false;
+        $('pomoStart').textContent = '▶ Bắt đầu';
+        if(pomoLabel === 'TẬP TRUNG'){
+          pomoCount++;
+          DB.set('pomoCount_' + todayKey(), pomoCount);
+          $('pomoCount').textContent = pomoCount;
+          const key = todayKey();
+          pomoHistory[key] = (pomoHistory[key] || 0) + 25;
+          DB.set('pomoHistory', pomoHistory);
+          renderDashboard();
+        }
+        playBeep();
+        toast(pomoLabel === 'TẬP TRUNG' ? '⏰ Hết giờ! Nghỉ ngơi thôi 🎉' : '☕ Hết giờ nghỉ! Quay lại học nào 💪');
+      }
+    }, 1000);
+  }
+}
+function resetPomo(){
+  clearInterval(pomoInterval); pomoRunning = false;
+  $('pomoStart').textContent = '▶ Bắt đầu';
+  pomoLeft = pomoTotal; updatePomoUI();
+}
+function playBeep(){
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = 880; g.gain.value = 0.12;
+    o.start();
+    setTimeout(() => { o.frequency.value = 1100; }, 150);
+    setTimeout(() => { o.stop(); }, 600);
+  } catch(e){}
+}
+updatePomoUI();
+
+/* ============ TIMETABLE ============ */
+let schedule = DB.get('schedule', []);
+const DAYS = ['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7','Chủ nhật'];
+const SLOTS = ['Sáng','Chiều','Tối'];
+const dayColors = ['#6366f1','#06b6d4','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899'];
+
 function addSchedule(){
   const subject = $('schSubject').value.trim();
   if(!subject){ toast('⚠️ Nhập tên môn học'); return; }
   schedule.push({
-    id: Date.now(), day: $('schDay').value, subject,
+    id: Date.now(),
+    day: $('schDay').value,
+    subject,
     room: $('schRoom').value.trim() || '—',
-    start: $('schStart').value || '--:--',
-    end: $('schEnd').value || '--:--'
+    start: $('schStart').value || '07:30',
+    end: $('schEnd').value || '09:30'
   });
-  store.set('schedule', schedule);
+  DB.set('schedule', schedule);
   $('schSubject').value = ''; $('schRoom').value = '';
-  renderSchedule(); renderDashboard();
+  renderTimetable(); renderDashboard();
   toast('📅 Đã thêm lịch học');
 }
-const dayColors = ['#6c5ce7','#00cec9','#e17055','#00b894','#fdcb6e','#a29bfe','#fd79a8'];
-function renderSchedule(){
-  const days = ['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7','Chủ nhật'];
-  const sorted = [...schedule].sort((a,b)=>days.indexOf(a.day)-days.indexOf(b.day) || a.start.localeCompare(b.start));
-  $('scheduleBody').innerHTML = sorted.length ? sorted.map(s=>`
-    <tr>
-      <td><strong>${esc(s.day)}</strong></td>
-      <td><span class="subject-tag" style="background:${dayColors[days.indexOf(s.day)%7]}22;color:${dayColors[days.indexOf(s.day)%7]}">${esc(s.subject)}</span></td>
-      <td>${esc(s.room)}</td>
-      <td>${esc(s.start)} - ${esc(s.end)}</td>
-      <td><button class="todo-del" onclick="delSchedule(${s.id})">🗑</button></td>
-    </tr>`).join('')
-    : '<tr><td colspan="5"><div class="empty"><span class="empty-icon">📅</span>Chưa có lịch học</div></td></tr>';
-}
 function delSchedule(id){
-  schedule = schedule.filter(s=>s.id!==id);
-  store.set('schedule',schedule); renderSchedule(); renderDashboard();
+  schedule = schedule.filter(s => s.id !== id);
+  DB.set('schedule', schedule); renderTimetable(); renderDashboard();
 }
-
-/* ============ POMODORO ============ */
-let pomoTotal = 25*60, pomoLeft = 25*60, pomoRunning = false, pomoInterval = null, pomoLabel = 'TẬP TRUNG';
-let pomoCount = store.get('pomoCount', 0);
-$('pomoCount').textContent = pomoCount;
-
-document.querySelectorAll('.mode-btn').forEach(b=>{
-  b.onclick = () => {
-    document.querySelectorAll('.mode-btn').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    clearInterval(pomoInterval); pomoRunning = false;
-    $('startBtn').innerHTML = '▶ Bắt đầu';
-    pomoTotal = pomoLeft = parseInt(b.dataset.min)*60;
-    pomoLabel = b.dataset.label;
-    updateTimerUI();
+function renderTimetable(){
+  const grid = $('ttGrid');
+  grid.innerHTML = '<div></div>' + DAYS.map(d => `<div class="tt-day">${d}</div>`).join('');
+  // Build time slots per day
+  DAYS.forEach((day, di) => {
+    // Left labels (show once via first col)
+  });
+  // Actually build 3 rows: Sáng/Chiều/Tối
+  const timeRanges = {
+    'Sáng': [0, 12],
+    'Chiều': [12, 18],
+    'Tối': [18, 24]
   };
-});
-function updateTimerUI(){
-  const m = Math.floor(pomoLeft/60), s = pomoLeft%60;
-  $('timerTime').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  $('timerLabel').textContent = pomoLabel;
-  const deg = (1 - pomoLeft/pomoTotal) * 360;
-  $('timerCircle').style.background = `conic-gradient(var(--primary) ${deg}deg, var(--border) ${deg}deg)`;
+  Object.entries(timeRanges).forEach(([label, [from, to]]) => {
+    grid.insertAdjacentHTML('beforeend', `<div class="tt-day" style="display:flex;align-items:center;justify-content:center;background:transparent;color:var(--text-dim)">${label}</div>`);
+    DAYS.forEach((day, di) => {
+      const items = schedule.filter(s => {
+        const h = parseInt(s.start.split(':')[0]);
+        return s.day === day && h >= from && h < to;
+      });
+      const cell = `<div class="tt-cell ${items.length ? 'has' : ''}">
+        ${items.map(s => `
+          <div class="tt-slot" style="background:${dayColors[di]}" title="${esc(s.subject)} - ${esc(s.room)}">
+            ${esc(s.subject)}
+            <span class="rm">${esc(s.start)}-${esc(s.end)} • ${esc(s.room)}</span>
+            <span class="x" onclick="delSchedule(${s.id})">✕</span>
+          </div>`).join('')}
+      </div>`;
+      grid.insertAdjacentHTML('beforeend', cell);
+    });
+  });
 }
-function toggleTimer(){
-  if(pomoRunning){
-    clearInterval(pomoInterval); pomoRunning = false;
-    $('startBtn').innerHTML = '▶ Tiếp tục';
-  } else {
-    pomoRunning = true;
-    $('startBtn').innerHTML = '⏸ Tạm dừng';
-    pomoInterval = setInterval(()=>{
-      pomoLeft--;
-      updateTimerUI();
-      if(pomoLeft <= 0){
-        clearInterval(pomoInterval); pomoRunning = false;
-        $('startBtn').innerHTML = '▶ Bắt đầu';
-        if(pomoLabel === 'TẬP TRUNG'){
-          pomoCount++; store.set('pomoCount', pomoCount);
-          $('pomoCount').textContent = pomoCount;
-          renderDashboard();
-        }
-        toast('⏰ Hết giờ! ' + (pomoLabel==='TẬP TRUNG' ? 'Nghỉ ngơi thôi 🎉' : 'Quay lại học nào 💪'));
-        try{
-          const ctx = new (window.AudioContext||window.webkitAudioContext)();
-          const o = ctx.createOscillator(), g = ctx.createGain();
-          o.connect(g); g.connect(ctx.destination);
-          o.frequency.value = 800; g.gain.value = 0.1;
-          o.start(); setTimeout(()=>o.stop(), 500);
-        }catch(e){}
-      }
-    },1000);
-  }
-}
-function resetTimer(){
-  clearInterval(pomoInterval); pomoRunning = false;
-  $('startBtn').innerHTML = '▶ Bắt đầu';
-  pomoLeft = pomoTotal; updateTimerUI();
-}
-updateTimerUI();
 
-/* ============ FLASHCARD ============ */
-let flashcards = store.get('flashcards', []);
+/* ============ FLASHCARDS ============ */
+let flashcards = DB.get('flashcards', []);
 let fcIndex = 0;
+
 function addFlashcard(){
   const q = $('fcQ').value.trim(), a = $('fcA').value.trim();
   if(!q || !a){ toast('⚠️ Nhập đủ câu hỏi và câu trả lời'); return; }
   flashcards.push({ id: Date.now(), q, a });
-  store.set('flashcards', flashcards);
+  DB.set('flashcards', flashcards);
   $('fcQ').value = ''; $('fcA').value = '';
   renderFlashcards(); renderDashboard();
   toast('🃏 Đã thêm flashcard');
 }
 function delFlashcard(id){
-  flashcards = flashcards.filter(f=>f.id!==id);
+  flashcards = flashcards.filter(f => f.id !== id);
   if(fcIndex >= flashcards.length) fcIndex = 0;
-  store.set('flashcards', flashcards);
+  DB.set('flashcards', flashcards);
   renderFlashcards(); renderDashboard();
+}
+function fcNav(d){
+  if(!flashcards.length) return;
+  fcIndex = (fcIndex + d + flashcards.length) % flashcards.length;
+  renderFlashcards();
 }
 function renderFlashcards(){
   $('fcTotal').textContent = flashcards.length;
+  const area = $('fcArea');
   if(!flashcards.length){
-    $('fcArea').innerHTML = '<div class="empty"><span class="empty-icon">🃏</span>Chưa có flashcard nào</div>';
+    area.innerHTML = '<div class="empty"><span class="empty-icon">🃏</span>Chưa có flashcard nào</div>';
     $('fcList').innerHTML = '<div class="empty">Danh sách trống</div>';
     return;
   }
   const c = flashcards[fcIndex];
-  $('fcArea').innerHTML = `
-    <div class="flashcard" id="fcCard" onclick="this.classList.toggle('flipped')">
+  area.innerHTML = `
+    <div class="fc-stage" id="fcStage" onclick="this.classList.toggle('flipped')">
       <div class="fc-inner">
-        <div class="fc-face fc-front">${esc(c.q)}</div>
-        <div class="fc-face fc-back">${esc(c.a)}</div>
+        <div class="fc-face fc-front">
+          ${esc(c.q)}
+          <span class="fc-hint">👆 Nhấn để xem đáp án</span>
+        </div>
+        <div class="fc-face fc-back">
+          ${esc(c.a)}
+          <span class="fc-hint">👆 Nhấn để quay lại</span>
+        </div>
       </div>
     </div>
-    <p style="text-align:center;color:var(--text-light);font-size:13px;margin-bottom:14px;">
-      👆 Nhấn vào thẻ để lật • Thẻ ${fcIndex+1}/${flashcards.length}
-    </p>
-    <div class="timer-controls">
+    <p style="text-align:center;color:var(--text-dim);font-size:13px;margin-bottom:14px">Thẻ ${fcIndex+1} / ${flashcards.length}</p>
+    <div class="pomo-controls">
       <button class="btn btn-ghost" onclick="fcNav(-1)">← Trước</button>
       <button class="btn btn-primary" onclick="fcNav(1)">Tiếp →</button>
     </div>`;
-  $('fcList').innerHTML = flashcards.map((f,i)=>`
-    <div class="todo-item" style="border-left-color:var(--accent)">
-      <span style="font-weight:700;color:var(--text-light);font-size:13px;">${i+1}.</span>
-      <span class="todo-text"><strong>${esc(f.q)}</strong><br>
-        <span style="color:var(--text-light);font-size:13px;">${esc(f.a)}</span></span>
-      <button class="todo-del" onclick="delFlashcard(${f.id})">🗑</button>
+  $('fcList').innerHTML = flashcards.map((f, i) => `
+    <div class="task-item" style="border-left-color:var(--accent)">
+      <span style="font-weight:800;color:var(--text-dim);font-size:13px;min-width:20px">${i+1}</span>
+      <div class="task-content">
+        <div style="font-size:14px;font-weight:600">${esc(f.q)}</div>
+        <div style="font-size:13px;color:var(--text-dim);margin-top:4px">${esc(f.a)}</div>
+      </div>
+      <button class="task-del" onclick="delFlashcard(${f.id})">🗑</button>
     </div>`).join('');
-}
-function fcNav(d){
-  fcIndex = (fcIndex + d + flashcards.length) % flashcards.length;
-  renderFlashcards();
 }
 
 /* ============ GPA ============ */
@@ -691,16 +1130,16 @@ function addGpaRow(){
   const div = document.createElement('div');
   div.className = 'gpa-row';
   div.innerHTML = `
-    <input type="text" placeholder="Tên môn" class="g-name">
-    <input type="number" placeholder="TC" min="1" max="10" value="3" class="g-credit">
-    <input type="number" placeholder="Điểm" min="0" max="10" step="0.1" value="8" class="g-score">
-    <button class="btn btn-danger" style="padding:10px 14px;" onclick="this.parentElement.remove()">✕</button>`;
+    <input type="text" class="input g-name" placeholder="Tên môn">
+    <input type="number" class="input g-credit" placeholder="TC" min="1" max="10" value="3">
+    <input type="number" class="input g-score" placeholder="Điểm" min="0" max="10" step="0.1" value="8">
+    <button class="btn btn-ghost btn-sm" onclick="this.parentElement.remove()">✕</button>`;
   $('gpaRows').appendChild(div);
 }
 function calcGpa(){
   const rows = document.querySelectorAll('.gpa-row');
-  let totalC = 0, totalP = 0, total10 = 0;
-  rows.forEach(r=>{
+  let totalC = 0, totalP = 0, total10 = 0, count = 0;
+  rows.forEach(r => {
     const c = parseFloat(r.querySelector('.g-credit').value) || 0;
     const s = parseFloat(r.querySelector('.g-score').value);
     if(c > 0 && !isNaN(s)){
@@ -714,10 +1153,10 @@ function calcGpa(){
       else if(s10 >= 5.0) g4 = 1.5;
       else if(s10 >= 4.0) g4 = 1.0;
       else g4 = 0;
-      totalC += c; totalP += g4 * c; total10 += s10 * c;
+      totalC += c; totalP += g4 * c; total10 += s10 * c; count++;
     }
   });
-  if(totalC === 0){ toast('⚠️ Nhập ít nhất 1 môn có tín chỉ'); return; }
+  if(!totalC){ toast('⚠️ Nhập ít nhất 1 môn có tín chỉ'); return; }
   const gpa4 = totalP / totalC, gpa10 = total10 / totalC;
   $('gpaValue').textContent = gpa4.toFixed(2);
   let rank = 'Yếu';
@@ -725,89 +1164,255 @@ function calcGpa(){
   else if(gpa4 >= 3.2) rank = 'Giỏi 🌟';
   else if(gpa4 >= 2.5) rank = 'Khá 👍';
   else if(gpa4 >= 2.0) rank = 'Trung bình';
-  $('gpaExtra').textContent = `Hệ 10: ${gpa10.toFixed(2)} • ${totalC} tín chỉ • Xếp loại: ${rank}`;
+  $('gpaExtra').textContent = `Hệ 10: ${gpa10.toFixed(2)} • ${totalC} tín chỉ • ${rank}`;
   $('gpaResult').style.display = 'block';
   toast('🎯 Đã tính GPA');
 }
 addGpaRow(); addGpaRow(); addGpaRow();
 
 /* ============ NOTES ============ */
-let notes = store.get('notes', []);
+let notes = DB.get('notes', []);
+const NOTE_COLORS = ['#fef3c7', '#dbeafe', '#dcfce7', '#fce7f3', '#ede9fe', '#ffedd5'];
+let noteColor = NOTE_COLORS[0];
+
+// Color picker
+const picker = $('colorPicker');
+NOTE_COLORS.forEach((c, i) => {
+  const b = document.createElement('button');
+  b.style.cssText = `width:24px;height:24px;border-radius:7px;border:2px solid ${i===0?'var(--primary)':'var(--border)'};background:${c};cursor:pointer;transition:.2s`;
+  b.onclick = () => {
+    noteColor = c;
+    picker.querySelectorAll('button').forEach(x => x.style.borderColor = 'var(--border)');
+    b.style.borderColor = 'var(--primary)';
+  };
+  picker.appendChild(b);
+});
+
 function addNote(){
   const t = $('noteTitle').value.trim(), c = $('noteContent').value.trim();
   if(!t && !c){ toast('⚠️ Nhập nội dung ghi chú'); return; }
   notes.unshift({
-    id: Date.now(), title: t || 'Không tiêu đề', content: c,
+    id: Date.now(),
+    title: t || 'Không tiêu đề',
+    content: c,
+    color: noteColor,
     date: new Date().toLocaleString('vi-VN')
   });
-  store.set('notes', notes);
+  DB.set('notes', notes);
   $('noteTitle').value = ''; $('noteContent').value = '';
   renderNotes(); renderDashboard();
   toast('💾 Đã lưu ghi chú');
 }
 function delNote(id){
-  notes = notes.filter(n=>n.id!==id);
-  store.set('notes', notes); renderNotes(); renderDashboard();
+  notes = notes.filter(n => n.id !== id);
+  DB.set('notes', notes); renderNotes(); renderDashboard();
 }
 function renderNotes(){
-  $('notesList').innerHTML = notes.length ? notes.map(n=>`
-    <div class="note-card">
-      <button class="note-del" onclick="delNote(${n.id})">🗑</button>
+  $('notesList').innerHTML = notes.length ? notes.map(n => `
+    <div class="note" style="background:${n.color}">
+      <button class="del" onclick="delNote(${n.id})">✕</button>
       <h4>${esc(n.title)}</h4>
       <p>${esc(n.content)}</p>
-      <span class="note-date">🕐 ${esc(n.date)}</span>
+      <span class="date">🕐 ${esc(n.date)}</span>
     </div>`).join('')
-    : '<div class="empty" style="grid-column:1/-1;"><span class="empty-icon">📝</span>Chưa có ghi chú nào</div>';
+    : '<div class="empty" style="grid-column:1/-1"><span class="empty-icon">📝</span>Chưa có ghi chú nào</div>';
+}
+
+/* ============ HABITS ============ */
+let habits = DB.get('habits', [
+  { id: 1, name: '📖 Đọc sách 30 phút', days: [0,0,0,0,0,0,0] },
+  { id: 2, name: '🏃 Tập thể dục', days: [0,0,0,0,0,0,0] },
+  { id: 3, name: '💧 Uống đủ nước', days: [0,0,0,0,0,0,0] }
+]);
+let habitsWeek = DB.get('habitsWeek', weekKey());
+if(habitsWeek !== weekKey()){
+  habits.forEach(h => h.days = [0,0,0,0,0,0,0]);
+  habitsWeek = weekKey();
+  DB.set('habits', habits);
+  DB.set('habitsWeek', habitsWeek);
+}
+
+function addHabit(){
+  const name = $('habitInput').value.trim();
+  if(!name){ toast('⚠️ Nhập tên thói quen'); return; }
+  habits.push({ id: Date.now(), name, days: [0,0,0,0,0,0,0] });
+  DB.set('habits', habits);
+  $('habitInput').value = '';
+  renderHabits();
+  toast('🔥 Đã thêm thói quen');
+}
+function toggleHabit(id, day){
+  const h = habits.find(x => x.id === id);
+  if(h){ h.days[day] = h.days[day] ? 0 : 1; DB.set('habits', habits); renderHabits(); }
+}
+function delHabit(id){
+  habits = habits.filter(h => h.id !== id);
+  DB.set('habits', habits); renderHabits();
+}
+function renderHabits(){
+  $('habitList').innerHTML = habits.length ? habits.map(h => `
+    <div class="habit-row">
+      <div class="habit-name">${esc(h.name)}</div>
+      ${h.days.map((d, i) => `
+        <div class="habit-day ${d ? 'done' : ''}" onclick="toggleHabit(${h.id},${i})">✓</div>
+      `).join('')}
+      <button class="habit-del" onclick="delHabit(${h.id})">🗑</button>
+    </div>`).join('')
+    : '<div class="empty"><span class="empty-icon">🔥</span>Chưa có thói quen nào</div>';
 }
 
 /* ============ DASHBOARD ============ */
-const tips = [
-  'Sử dụng kỹ thuật Pomodoro: học 25 phút, nghỉ 5 phút để duy trì sự tập trung cao độ.',
-  'Ôn tập theo phương pháp Spaced Repetition — ôn lại kiến thức sau 1 ngày, 3 ngày, 1 tuần.',
-  'Dạy lại kiến thức cho người khác là cách học hiệu quả nhất (Feynman Technique).',
-  'Học vào buổi sáng sớm khi não bộ minh mẫn sẽ ghi nhớ tốt hơn.',
-  'Chia nhỏ mục tiêu lớn thành các bước nhỏ để dễ dàng bắt đầu và duy trì động lực.',
-  'Ngủ đủ 7-8 tiếng — giấc ngủ giúp củng cố trí nhớ dài hạn.',
-  'Tránh học nhồi nhét trước kỳ thi, hãy học đều đặn mỗi ngày.',
-  'Ghi chú bằng tay giúp ghi nhớ tốt hơn so với gõ máy tính.',
-  'Loại bỏ điện thoại khỏi bàn học để tránh xao nhãng.',
-  'Uống đủ nước và vận động nhẹ giữa các giờ học để tăng tỉnh táo.'
-];
-function randomTip(){
-  $('studyTip').textContent = tips[Math.floor(Math.random()*tips.length)];
-}
 function renderDashboard(){
-  $('statTasks').textContent = todos.filter(t=>!t.done).length;
-  $('statPomo').textContent = pomoCount;
-  $('statCards').textContent = flashcards.length;
-  $('statNotes').textContent = notes.length;
+  const h = new Date().getHours();
+  let greet = 'Chào buổi sáng! ☀️';
+  if(h >= 12 && h < 18) greet = 'Chào buổi chiều! 🌤️';
+  else if(h >= 18) greet = 'Chào buổi tối! 🌙';
+  $('greeting').textContent = greet;
 
-  const open = todos.filter(t=>!t.done).slice(0,5);
-  $('dashTodos').innerHTML = open.length ? open.map(todoHTML).join('')
-    : '<div class="empty"><span class="empty-icon">🎉</span>Tuyệt vời! Không có việc nào.</div>';
-
+  const d = new Date();
   const days = ['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
-  const today = days[new Date().getDay()];
-  const todaySch = schedule.filter(s=>s.day === today).sort((a,b)=>a.start.localeCompare(b.start));
-  $('dashSchedule').innerHTML = todaySch.length ? todaySch.map(s=>`
-    <div class="todo-item" style="border-left-color:var(--accent)">
-      <div style="flex:1;">
-        <strong>${esc(s.subject)}</strong>
-        <div style="font-size:13px;color:var(--text-light);margin-top:3px;">
-          🕐 ${esc(s.start)} - ${esc(s.end)} • 📍 ${esc(s.room)}
+  $('dateText').textContent = `${days[d.getDay()]}, ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+
+  const openTasks = tasks.filter(t => !t.done).length;
+  $('bannerStreak').textContent = pomoCount > 0 ? 1 : 0;
+  $('bannerPomo').textContent = pomoCount;
+  $('bannerTasks').textContent = openTasks;
+  $('sTasks').textContent = openTasks;
+  $('sPomo').textContent = pomoCount;
+  $('sCards').textContent = flashcards.length;
+  $('sNotes').textContent = notes.length;
+
+  // Today's schedule
+  const today = days[d.getDay()];
+  const todaySch = schedule.filter(s => s.day === today).sort((a,b) => a.start.localeCompare(b.start));
+  $('todaySchedule').innerHTML = todaySch.length ? todaySch.map(s => `
+    <div class="task-item" style="border-left-color:var(--accent)">
+      <div class="task-content">
+        <div style="font-weight:600">${esc(s.subject)}</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:3px">
+          🕐 ${esc(s.start)} - ${esc(s.end)} &nbsp;•&nbsp; 📍 ${esc(s.room)}
         </div>
       </div>
     </div>`).join('')
-    : `<div class="empty"><span class="empty-icon">☕</span>Hôm nay (${today}) không có lịch học</div>`;
+    : `<div class="empty"><span class="empty-icon">☕</span>Hôm nay không có lịch học</div>`;
+
+  // Urgent tasks
+  const urgent = tasks.filter(t => !t.done).sort((a,b) => {
+    const order = { high:0, med:1, low:2 };
+    return order[a.priority] - order[b.priority];
+  }).slice(0,5);
+  $('dashTasks').innerHTML = urgent.length ? urgent.map(taskHTML).join('')
+    : '<div class="empty"><span class="empty-icon">🎉</span>Tuyệt vời! Không có việc nào</div>';
 }
 
+/* ============ CHART ============ */
+function drawChart(){
+  const canvas = $('weekChart');
+  if(!canvas || canvas.offsetParent === null) return;
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const W = rect.width, H = rect.height;
+  const pad = { t: 20, r: 10, b: 32, l: 34 };
+
+  const days = ['T2','T3','T4','T5','T6','T7','CN'];
+  // Get last 7 days data
+  const data = [];
+  const labels = [];
+  for(let i = 6; i >= 0; i--){
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0,10);
+    data.push(pomoHistory[key] || 0);
+    const dow = d.getDay();
+    labels.push(['CN','T2','T3','T4','T5','T6','T7'][dow]);
+  }
+  const max = Math.max(...data, 60);
+  const chartW = W - pad.l - pad.r;
+  const chartH = H - pad.t - pad.b;
+  const barW = (chartW / 7) * 0.55;
+  const gap = chartW / 7;
+
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const textColor = isDark ? '#94a3b8' : '#64748b';
+  const gridColor = isDark ? '#1e2942' : '#e8ecf3';
+
+  // Grid
+  ctx.strokeStyle = gridColor;
+  ctx.lineWidth = 1;
+  for(let i = 0; i <= 4; i++){
+    const y = pad.t + (chartH / 4) * i;
+    ctx.beginPath();
+    ctx.moveTo(pad.l, y);
+    ctx.lineTo(W - pad.r, y);
+    ctx.stroke();
+    ctx.fillStyle = textColor;
+    ctx.font = '500 10px Inter';
+    ctx.textAlign = 'right';
+    ctx.fillText(Math.round(max - (max/4)*i) + 'p', pad.l - 6, y + 3);
+  }
+
+  // Bars
+  data.forEach((v, i) => {
+    const x = pad.l + gap * i + (gap - barW) / 2;
+    const barH = (v / max) * chartH;
+    const y = pad.t + chartH - barH;
+
+    const grad = ctx.createLinearGradient(0, y, 0, pad.t + chartH);
+    grad.addColorStop(0, '#6366f1');
+    grad.addColorStop(1, '#06b6d4');
+    ctx.fillStyle = v > 0 ? grad : gridColor;
+
+    const r = Math.min(8, barW / 2);
+    ctx.beginPath();
+    ctx.moveTo(x, pad.t + chartH);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.lineTo(x + barW - r, y);
+    ctx.quadraticCurveTo(x + barW, y, x + barW, y + r);
+    ctx.lineTo(x + barW, pad.t + chartH);
+    ctx.closePath();
+    ctx.fill();
+
+    // Label
+    ctx.fillStyle = textColor;
+    ctx.font = '600 11px Inter';
+    ctx.textAlign = 'center';
+    ctx.fillText(labels[i], x + barW / 2, H - 10);
+
+    // Value
+    if(v > 0){
+      ctx.fillStyle = '#6366f1';
+      ctx.font = '700 10px Inter';
+      ctx.fillText(v + 'p', x + barW / 2, y - 5);
+    }
+  });
+}
+window.addEventListener('resize', drawChart);
+
+/* ============ SEARCH ============ */
+$('globalSearch').addEventListener('input', () => {
+  const v = $('globalSearch').value.trim();
+  if(v && !document.querySelector('.view[data-page="tasks"]').classList.contains('active')){
+    // stay on current view but filter if tasks
+  }
+  if(document.querySelector('.view[data-page="tasks"]').classList.contains('active')){
+    renderTasks();
+  }
+});
+
 /* ============ INIT ============ */
-renderTodos();
-renderSchedule();
+renderTasks();
+renderTimetable();
 renderFlashcards();
 renderNotes();
+renderHabits();
 renderDashboard();
-randomTip();
+setTimeout(drawChart, 100);
 </script>
 </body>
 </html>
