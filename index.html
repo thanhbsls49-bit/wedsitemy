@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Duy Thành — Đồ uống tươi mỗi ngày</title>
+<title>Trà & Cà Phê — Đồ uống tươi mỗi ngày</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
@@ -70,7 +70,6 @@ header{
   background:linear-gradient(135deg,var(--primary),var(--accent));
   display:flex;align-items:center;justify-content:center;
   font-size:22px;box-shadow:var(--shadow-sm);
-  color:white;font-family:'Playfair Display',serif;font-weight:800;
 }
 .nav{
   display:flex;gap:6px;flex:1;justify-content:center;
@@ -540,8 +539,8 @@ footer{
 <header>
   <div class="header-inner">
     <div class="logo">
-      <div class="logo-icon">Đ</div>
-      <span>Duy Thành</span>
+      <div class="logo-icon">☕</div>
+      <span>Trà & Cà Phê</span>
     </div>
     <nav class="nav">
       <a href="#trang-chu" class="active">Trang chủ</a>
@@ -565,7 +564,7 @@ footer{
     <div class="hero-content">
       <div class="hero-badge">☕ ĐỒ UỐNG THỦ CÔNG MỖI NGÀY</div>
       <h1>Thưởng thức <em>hương vị</em><br>đích thực mỗi ngày</h1>
-      <p>Duy Thành mang đến bộ sưu tập trà, cà phê và đồ uống thủ công được pha chế từ nguyên liệu tươi ngon nhất — trải nghiệm vị giác tuyệt vời cho bạn.</p>
+      <p>Khám phá bộ sưu tập trà, cà phê và đồ uống thủ công được pha chế từ nguyên liệu tươi ngon nhất — mang đến cho bạn trải nghiệm vị giác tuyệt vời.</p>
       <div class="hero-buttons">
         <a href="#san-pham" class="btn btn-primary">🛒 Đặt hàng ngay</a>
         <a href="#danh-muc" class="btn btn-outline">Khám phá menu</a>
@@ -590,7 +589,7 @@ footer{
   <div class="section-head">
     <span class="kicker">Danh mục</span>
     <h2>Khám phá theo sở thích</h2>
-    <p>Chọn loại đồ uống yêu thích của bạn trong bộ sưu tập đa dạng của Duy Thành</p>
+    <p>Chọn loại đồ uống yêu thích của bạn trong bộ sưu tập đa dạng của chúng tôi</p>
   </div>
   <div class="cat-grid" id="catGrid"></div>
 </section>
@@ -600,7 +599,7 @@ footer{
   <div class="section-head">
     <span class="kicker">Menu</span>
     <h2>Sản phẩm nổi bật</h2>
-    <p>Những thức uống được yêu thích nhất tại Duy Thành</p>
+    <p>Những thức uống được yêu thích nhất tại Trà & Cà Phê</p>
   </div>
   <div class="filters" id="filters"></div>
   <div class="product-grid" id="productGrid"></div>
@@ -654,7 +653,7 @@ footer{
   <div class="section-head">
     <span class="kicker">Khách hàng nói gì</span>
     <h2>Đánh giá từ người dùng</h2>
-    <p>Hơn 10.000 khách hàng tin tưởng và yêu thích đồ uống của Duy Thành</p>
+    <p>Hơn 10.000 khách hàng tin tưởng và yêu thích đồ uống của chúng tôi</p>
   </div>
   <div class="testimonials" id="reviewGrid"></div>
 </section>
@@ -676,8 +675,8 @@ footer{
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="logo">
-        <div class="logo-icon">Đ</div>
-        <span>Duy Thành</span>
+        <div class="logo-icon">☕</div>
+        <span>Trà & Cà Phê</span>
       </div>
       <p>Mang đến cho bạn những ly đồ uống thủ công tươi ngon nhất, được pha chế với tình yêu và sự tận tâm.</p>
       <div class="footer-social">
@@ -711,13 +710,13 @@ footer{
       <ul>
         <li><a href="#">📍 123 Nguyễn Huệ, Q.1, TP.HCM</a></li>
         <li><a href="#">📞 1900 1234</a></li>
-        <li><a href="#">✉️ hello@duythanh.vn</a></li>
+        <li><a href="#">✉️ hello@tra-caphe.vn</a></li>
         <li><a href="#">🕐 7:00 - 22:00 hàng ngày</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    © 2024 Duy Thành. Made with ☕ in Việt Nam.
+    © 2024 Trà & Cà Phê. Made with ☕ in Việt Nam.
   </div>
 </footer>
 
@@ -790,11 +789,11 @@ const PRODUCTS = [
 
 const REVIEWS = [
   { name:'Nguyễn Minh Anh', role:'Sinh viên', av:'MA', stars:5,
-    text:'Trà đào cam sả ở Duy Thành ngon nhất mình từng uống! Vị thanh mát, thơm sả và đào tươi. Giao hàng cũng nhanh nữa.' },
+    text:'Trà đào cam sả ở đây ngon nhất mình từng uống! Vị thanh mát, thơm sả và đào tươi. Giao hàng cũng nhanh nữa.' },
   { name:'Trần Quốc Bảo', role:'Nhân viên văn phòng', av:'QB', stars:5,
     text:'Cà phê sữa đá đậm đà đúng gu. Mình đặt mỗi sáng, ship tới văn phòng luôn còn nóng. Giá cả hợp lý.' },
   { name:'Lê Thu Hà', role:'Chủ shop online', av:'TH', stars:5,
-    text:'Trà sữa trân châu dai ngon, ngọt vừa phải. Trân châu đường đen thơm lắm. Sẽ ủng hộ Duy Thành dài dài!' },
+    text:'Trà sữa trân châu dai ngon, ngọt vừa phải. Trân châu đường đen thơm lắm. Sẽ ủng hộ dài dài!' },
   { name:'Phạm Đức Duy', role:'Freelancer', av:'DD', stars:4,
     text:'Matcha trà sữa ngon, đắng nhẹ đúng vị Nhật. Nhân viên tư vấn nhiệt tình. Recommend mọi người thử.' },
   { name:'Hoàng Mai Linh', role:'Giáo viên', av:'ML', stars:5,
